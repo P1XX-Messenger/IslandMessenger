@@ -1,0 +1,20 @@
+name: Build tweak
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Theos
+        uses: Randomblock1/theos-action@v1
+      - name: Build rootless (Dopamine / palera1n rootless)
+        run: make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+      - name: Build rootful (palera1n rootful)
+        run: make clean package FINALPACKAGE=1
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: IslandMessenger-deb
+          path: packages/*.deb
